@@ -1,8 +1,13 @@
 package zure;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -13,7 +18,10 @@ import java.sql.Statement;
 
 public final class Zure {
 
-    private static final String fileRootPath = "C:\\\\Users\\user\\Desktop\\zure\\targets\\";
+    // private static final String fileRootPath =
+    // "C:\\\\Users\\user\\Desktop\\zure\\targets\\";
+
+    private static final String fileRootPath = "/";
 
     private static final String resultFilePath = "C:\\\\Users\\user\\Desktop\\zure\\result\\";
 
@@ -39,6 +47,7 @@ public final class Zure {
                 String val_B = kv_B[1];
                 if (key_A.equals(key_B)) {
                     // 照合開始
+                    // TODO どのカラムがミスマッチだったかを知るにはif文で一つ一つ見る必要ある。。
                     data_A = data_A.replace(not_yet, val_A.equals(val_B) ? ok_status : ng_status);
                     data_B = data_B.replace(not_yet, val_A.equals(val_B) ? ok_status : ng_status);
                     System.out.println("RESRERSERESRSERESRSEval_data_A->" + data_A);
@@ -46,14 +55,13 @@ public final class Zure {
                 }
             }
         }
-
     }
 
     public static TargetData loadDataFromFile(String filename) {
         try {
             List<String> list = new ArrayList<>();
-            Files.lines(Paths.get(fileRootPath + filename)).forEach(e -> list.add(e));
-
+            Files.lines(Paths.get("../config/" + filename)).forEach(e -> list.add(e));
+            // System.out.println(">>>>>>>>>>>>>>>>>>>>>.loadDataFromFile.list->" + list);
             return targetDataMapping(list);
 
         } catch (Exception e) {
@@ -128,17 +136,18 @@ public final class Zure {
     }
 
     public static String buildSQL(String table, List<String> keys, List<String> targets) {
-        String columns = "";
+        StringBuilder columns = new StringBuilder();
         for (int i = 0; i < keys.size(); i++) {
             if (i != 0) {
-                columns += ", ";
+                columns.append(", ");
             }
-            columns += keys.get(i);
+            columns.append(keys.get(i));
         }
         for (int i = 0; i < targets.size(); i++) {
-            columns += ", " + targets.get(i);
+            columns.append(", " + targets.get(i));
         }
-        return "select {{columns}} from {{table}};".replace("{{columns}}", columns).replace("{{table}}", table);
+        return "select {{columns}} from {{table}};".replace("{{columns}}", columns.toString()).replace("{{table}}",
+                table);
     }
 
     public static List<String> executeSQL(Connection connection, String sql, TargetData targetData) {
@@ -170,7 +179,7 @@ public final class Zure {
                     keyAndtarget.append(String.valueOf(rs.getObject(targetColumn)));
                 }
 
-                System.out.println("keytarget=" + keyAndtarget.toString());
+                // System.out.println("keytarget=" + keyAndtarget.toString());
 
                 resultList.add(keyAndtarget.toString());
             }
@@ -182,6 +191,21 @@ public final class Zure {
         }
 
         return null;
+    }
+
+    public static void outputResultFile() {
+        try {
+            String filepath = "../result/" + "result-" + new Date().getTime() + ".html";
+            Files.createFile(Paths.get(filepath));
+
+            List<String> contents = new ArrayList<>();
+            contents.add("<script>alert('aaa');</script>");
+            Files.write(Paths.get(filepath), contents, Charset.forName("UTF-8"), StandardOpenOption.WRITE);
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
 }

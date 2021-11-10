@@ -50,6 +50,7 @@ public class App {
 
             // 結果出力(html or log)
             Result.outputFile(Result.getContent(result));
+            Zure.outputResultFile();
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.outputFile complete");
 
