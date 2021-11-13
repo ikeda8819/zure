@@ -1,6 +1,5 @@
 package zure;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -11,19 +10,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-public final class Zure {
-
-    // private static final String fileRootPath =
-    // "C:\\\\Users\\user\\Desktop\\zure\\targets\\";
-
-    private static final String fileRootPath = "/";
-
-    private static final String resultFilePath = "C:\\\\Users\\user\\Desktop\\zure\\result\\";
+public class Zure {
 
     public static final String ok_status = "{{ok_status}}";
     public static final String ng_status = "{{ng_status}}";
@@ -33,7 +29,6 @@ public final class Zure {
     public static final String kv_separate = "{{kv_separate}}";
 
     public static void bulkCheck(List<String> list_A, List<String> list_B, Map<String, String> result) {
-
         for (String data_A : list_A) {
             String[] kv_A = data_A.split(Pattern.quote(kv_separate));
             String key_A = kv_A[0].replace(not_yet, "");
@@ -57,17 +52,11 @@ public final class Zure {
         }
     }
 
-    public static TargetData loadDataFromFile(String filename) {
-        try {
-            List<String> list = new ArrayList<>();
-            Files.lines(Paths.get("../config/" + filename)).forEach(e -> list.add(e));
-            // System.out.println(">>>>>>>>>>>>>>>>>>>>>.loadDataFromFile.list->" + list);
-            return targetDataMapping(list);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static TargetData loadDataFromFile(String filename) throws IOException {
+        List<String> list = new ArrayList<>();
+        Files.lines(Paths.get("../config/" + filename)).forEach(e -> list.add(e));
+        // System.out.println(">>>>>>>>>>>>>>>>>>>>>.loadDataFromFile.list->" + list);
+        return targetDataMapping(list);
     }
 
     private static TargetData targetDataMapping(List<String> list) {
@@ -193,19 +182,44 @@ public final class Zure {
         return null;
     }
 
-    public static void outputResultFile() {
+    public static void outputResultFile(List<String> list_A, List<String> list_B) throws Exception {
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter form = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String filepath = "../result/" + "result-" + now.format(form) + ".html";
+
+        Stream<String> lines = null;
         try {
-            String filepath = "../result/" + "result-" + new Date().getTime() + ".html";
             Files.createFile(Paths.get(filepath));
 
-            List<String> contents = new ArrayList<>();
-            contents.add("<script>alert('aaa');</script>");
-            Files.write(Paths.get(filepath), contents, Charset.forName("UTF-8"), StandardOpenOption.WRITE);
+            int ok = 0;
+            int ng = 0;
+            int notyet = 0;
+            for (String a : list_A) {
+                if (a.startsWith(ok_status)) {
+                    ok++;
+                } else if (a.startsWith(ng_status)) {
+                    ng++;
+                } else {
+                    notyet++;
+                }
+            }
 
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            lines = Files.lines(Paths.get("../result/static/template.txt"));
+
+            String content = lines.collect(Collectors.joining(System.lineSeparator()));
+
+            content = content.replace("{{a_count}}", String.valueOf(list_A.size()))
+                    .replace("{{b_count}}", String.valueOf(list_B.size())).replace("{{ok_count}}", String.valueOf(ok))
+                    .replace("{{ng_count}}", String.valueOf(ng)).replace("{{?_count}}", String.valueOf(notyet));
+
+            Files.write(Paths.get(filepath), List.of(content), Charset.forName("UTF-8"), StandardOpenOption.WRITE);
+
+        } finally {
+            if (lines != null)
+                lines.close();
         }
+
     }
 
 }

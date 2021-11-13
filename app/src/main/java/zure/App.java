@@ -49,8 +49,8 @@ public class App {
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.bulkCheck complete");
 
             // 結果出力(html or log)
-            Result.outputFile(Result.getContent(result));
-            Zure.outputResultFile();
+            ResultTemplate.outputFile(ResultTemplate.getContent(result));
+            Zure.outputResultFile(dataList_A, dataList_B);
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.outputFile complete");
 

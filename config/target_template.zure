@@ -1,0 +1,17 @@
+type: csv
+file: shop.csv
+stop_on_invalid_record: true
+charset: UTF-8
+newline: LF
+delimiter: ','
+quote: '"'
+escape: '"'
+skip_header_lines: 1
+last_row: 12345
+key_columns: 
+- id
+target_columns: 
+- name
+- address
+- owner
+
