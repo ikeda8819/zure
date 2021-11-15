@@ -42,15 +42,13 @@ public class App {
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.executeSQL complete");
 
-            Map<String, String> result = initResultTemp();
-
-            Zure.bulkCheck(dataList_A, dataList_B, result);
+            Map<String, List<String>> errorInfo = Zure.bulkCheck(dataList_A, dataList_B, data_A.targetColumns,
+                    data_B.targetColumns);
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.bulkCheck complete");
 
             // 結果出力(html or log)
-            ResultTemplate.outputFile(ResultTemplate.getContent(result));
-            Zure.outputResultFile(dataList_A, dataList_B);
+            Zure.outputResultFile(errorInfo, dataList_A, dataList_B);
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.outputFile complete");
 
@@ -68,15 +66,5 @@ public class App {
                 e2.printStackTrace();
             }
         }
-    }
-
-    private static Map<String, String> initResultTemp() {
-        Map<String, String> template = new HashMap<>();
-        template.put("結果", "");
-        template.put("ターゲットAの件数", "");
-        template.put("ターゲットBの件数", "");
-        template.put("ターゲットBの件数", "");
-        template.put("ターゲットBの件数", "");
-        return template;
     }
 }

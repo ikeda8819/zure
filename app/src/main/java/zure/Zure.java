@@ -5,19 +5,19 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Zure {
 
@@ -28,7 +28,9 @@ public class Zure {
     public static final String separate = "{{separate}}";
     public static final String kv_separate = "{{kv_separate}}";
 
-    public static void bulkCheck(List<String> list_A, List<String> list_B, Map<String, String> result) {
+    public static Map<String, List<String>> bulkCheck(List<String> list_A, List<String> list_B, List<String> targets_A,
+            List<String> targets_B) {
+        List<String> errorInfo = new ArrayList<>();
         for (String data_A : list_A) {
             String[] kv_A = data_A.split(Pattern.quote(kv_separate));
             String key_A = kv_A[0].replace(not_yet, "");
@@ -47,15 +49,58 @@ public class Zure {
                     data_B = data_B.replace(not_yet, val_A.equals(val_B) ? ok_status : ng_status);
                     System.out.println("RESRERSERESRSERESRSEval_data_A->" + data_A);
                     System.out.println("RESRERSERESRSERESRSEval_data_B->" + data_B);
+
+                    if (val_A.equals(val_B)) {
+
+                    } else {
+                        String[] vals_A = val_A.split(Pattern.quote(separate));
+                        String[] vals_B = val_B.split(Pattern.quote(separate));
+                        StringBuilder errMsg = new StringBuilder(key_A + "のデータで不整合です。<br/>");
+                        for (int i = 0; i < vals_A.length; i++) {
+                            // 比較するカラム数は一緒じゃないと困る
+                            if (!vals_A[i].equals(vals_B[i])) {
+                                errMsg.append(targets_A.get(i) + "と" + targets_B.get(i) + "が違います。").append("<br/>");
+                                errMsg.append(targets_A.get(i) + "->" + vals_A[i]).append("<br/>");
+                                errMsg.append(targets_B.get(i) + "->" + vals_B[i]).append("<br/>");
+                            }
+                        }
+                        errorInfo.add(errMsg.toString());
+                    }
                 }
             }
         }
+
+        List<String> unknownInfo_A = new ArrayList<>();
+        StringBuilder unknown = new StringBuilder("こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
+        for (String data_A : list_B) {
+            if (data_A.startsWith(not_yet)) {
+                String[] arr = data_A.split(Pattern.quote(kv_separate));
+                String key = arr[0].replace(not_yet, "");
+                unknown.append(key);
+                unknown.append("<br/>");
+            }
+        }
+        unknownInfo_A.add(unknown.toString());
+        unknown = new StringBuilder("こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
+        List<String> unknownInfo_B = new ArrayList<>();
+        for (String data_B : list_B) {
+            if (data_B.startsWith(not_yet)) {
+                unknown.append("<br/>");
+            }
+        }
+        unknownInfo_B.add(unknown.toString());
+
+        Map<String, List<String>> map = new HashMap<>();
+        map.put("ng", errorInfo);
+        map.put("unknown_A", unknownInfo_A);
+        map.put("unknown_B", unknownInfo_B);
+
+        return map;
     }
 
     public static TargetData loadDataFromFile(String filename) throws IOException {
         List<String> list = new ArrayList<>();
         Files.lines(Paths.get("../config/" + filename)).forEach(e -> list.add(e));
-        // System.out.println(">>>>>>>>>>>>>>>>>>>>>.loadDataFromFile.list->" + list);
         return targetDataMapping(list);
     }
 
@@ -182,7 +227,8 @@ public class Zure {
         return null;
     }
 
-    public static void outputResultFile(List<String> list_A, List<String> list_B) throws Exception {
+    public static void outputResultFile(Map<String, List<String>> errorMAp, List<String> list_A, List<String> list_B)
+            throws Exception {
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter form = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -211,7 +257,10 @@ public class Zure {
 
             content = content.replace("{{a_count}}", String.valueOf(list_A.size()))
                     .replace("{{b_count}}", String.valueOf(list_B.size())).replace("{{ok_count}}", String.valueOf(ok))
-                    .replace("{{ng_count}}", String.valueOf(ng)).replace("{{?_count}}", String.valueOf(notyet));
+                    .replace("{{ng_count}}", String.valueOf(ng)).replace("{{?_count}}", String.valueOf(notyet))
+                    .replace("{{ng_detail}}", errorMAp.get("ng").stream().collect(Collectors.joining("<br/>")))
+                    .replace("{{???_A}}", errorMAp.get("unknown_A").stream().collect(Collectors.joining("<br/>")))
+                    .replace("{{???_B}}", errorMAp.get("unknown_B").stream().collect(Collectors.joining("<br/>")));
 
             Files.write(Paths.get(filepath), List.of(content), Charset.forName("UTF-8"), StandardOpenOption.WRITE);
 
