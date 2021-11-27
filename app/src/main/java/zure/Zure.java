@@ -44,14 +44,9 @@ public class Zure {
                 String val_B = kv_B[1];
                 if (key_A.equals(key_B)) {
                     // 照合開始
-                    // TODO どのカラムがミスマッチだったかを知るにはif文で一つ一つ見る必要ある。。
-                    data_A = data_A.replace(not_yet, val_A.equals(val_B) ? ok_status : ng_status);
-                    data_B = data_B.replace(not_yet, val_A.equals(val_B) ? ok_status : ng_status);
-                    System.out.println("RESRERSERESRSERESRSEval_data_A->" + data_A);
-                    System.out.println("RESRERSERESRSERESRSEval_data_B->" + data_B);
-
                     if (val_A.equals(val_B)) {
-
+                        data_A = data_A.replace(not_yet, ok_status);
+                        data_B = data_B.replace(not_yet, ok_status);
                     } else {
                         String[] vals_A = val_A.split(Pattern.quote(separate));
                         String[] vals_B = val_B.split(Pattern.quote(separate));
@@ -65,6 +60,8 @@ public class Zure {
                             }
                         }
                         errorInfo.add(errMsg.toString());
+                        data_A = data_A.replace(not_yet, ng_status);
+                        data_B = data_B.replace(not_yet, ng_status);
                     }
                 }
             }
@@ -100,7 +97,7 @@ public class Zure {
 
     public static TargetData loadDataFromFile(String filename) throws IOException {
         List<String> list = new ArrayList<>();
-        Files.lines(Paths.get("../config/" + filename)).forEach(e -> list.add(e));
+        Files.lines(Paths.get(filename)).forEach(e -> list.add(e));
         return targetDataMapping(list);
     }
 
@@ -185,7 +182,7 @@ public class Zure {
     }
 
     public static List<String> executeSQL(Connection connection, String sql, TargetData targetData) {
-        System.out.println(">>>>>>>>>>>>>>>>>>executeSQL.sql:" + sql);
+        // System.out.println(">>>>>>>>>>>>>>>>>>executeSQL.sql:" + sql);
 
         List<String> resultList = new ArrayList<>();
 
@@ -232,7 +229,7 @@ public class Zure {
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter form = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String filepath = "../result/" + "result-" + now.format(form) + ".html";
+        String filepath = Setting.RESULT_FILE_PATH.replace("{{replaceStr}}", now.format(form));
 
         Stream<String> lines = null;
         try {
@@ -254,7 +251,6 @@ public class Zure {
             lines = Files.lines(Paths.get("../result/static/template.txt"));
 
             String content = lines.collect(Collectors.joining(System.lineSeparator()));
-
             content = content.replace("{{a_count}}", String.valueOf(list_A.size()))
                     .replace("{{b_count}}", String.valueOf(list_B.size())).replace("{{ok_count}}", String.valueOf(ok))
                     .replace("{{ng_count}}", String.valueOf(ng)).replace("{{?_count}}", String.valueOf(notyet))

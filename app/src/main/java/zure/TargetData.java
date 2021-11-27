@@ -29,6 +29,6 @@ class TargetData {
     }
 
     public boolean isSQLFile() {
-        return false;
+        return (queryFile != null && queryFile != "") && (table == null && table == "");
     }
 }

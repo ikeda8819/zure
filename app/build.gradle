@@ -9,6 +9,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
 }
 
 repositories {
@@ -36,7 +37,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'zure.App'
+    mainClassName = 'zure.App'
 }
 
 jar {

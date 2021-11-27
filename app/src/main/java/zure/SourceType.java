@@ -1,19 +1,35 @@
 package zure;
 
 public enum SourceType {
-    MySQL("mysql", "", "jdbc:mysql://"), PostgreSQL("postgresql,postgres", "", "jdbc:postgresql://"),
-    Oracle("oracle", "", "jdbc:oracle:thin:@"), SQLServer("sqlserver", "", "test"),
-    SQLite("sqlite", "", "jdbc:sqlite:"), DB2("db2", "", "test"), CSV("csv", "", "test"), TSV("tsv", "", "test"),
-    JSON("json", "", "test");
+    MySQL("rdb", "mysql", "com.mysql.jdbc.Driver", "jdbc:mysql://"),
+    PostgreSQL("rdb", "postgresql", "org.postgresql.Driver", "jdbc:postgresql://"),
+    Oracle("rdb", "oracle", "oracle.jdbc.driver.OracleDriver", "jdbc:oracle:thin:@"),
+    SQLServer("rdb", "sqlserver", "com.microsoft.sqlserver.jdbc.SQLServerDriver", "test"),
+    SQLite("rdb", "sqlite", "org.sqlite.JDBC", "jdbc:sqlite:jdbc:sqlite:jdbc:sqlite:"),
+    DB2("rdb", "db2", "com.ibm.db2.jcc.DB2Driver", "testtesttesttesttesttesttesttesttest"),
+    Redshift("rdb", "redshift", "com.ibm.db2.jcc.DB2Driver", "test"),
+    MongoDB("nosql", "mongodb", "com.ibm.db2.jcc.DB2Driver", "test"),
+    Elasticsearch("nosql", "elasticsearch", "com.ibm.db2.jcc.DB2Driver", "test"),
+    Redis("nosql", "redis", "com.ibm.db2.jcc.DB2Driver", "testtesttesttesttesttesttesttesttesttest"),
+    CSV("file", "csv", "", "testtesttesttesttesttesttesttesttesttesttesttest"),
+    TSV("file", "tsv", "", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"),
+    JSON("file", "json", "", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"),
+    XML("file", "xml", "", "test");
 
+    private String genre;
     private String label;
     private String driverName;
     private String urlPrefix;
 
-    private SourceType(String label, String driverName, String urlPrefix) {
+    private SourceType(String genre, String label, String driverName, String urlPrefix) {
+        this.genre = genre;
         this.label = label;
         this.driverName = driverName;
         this.urlPrefix = urlPrefix;
+    }
+
+    public String getGenre() {
+        return genre;
     }
 
     public String getLabel() {
@@ -28,23 +44,43 @@ public enum SourceType {
         return urlPrefix;
     }
 
-    public static String getDriverNameByType(String val) {
-        String _type = val.toLowerCase();
-        for (SourceType type : SourceType.values()) {
-            if (_type.equals(type.getDriverName())) {
-                return type.getDriverName();
+    public static String getDriverNameByType(String type) {
+        String _type = type.toLowerCase();
+        for (SourceType source : SourceType.values()) {
+            if (_type.equals(source.getLabel())) {
+                return source.getDriverName();
             }
         }
         return "";
     }
 
-    public static String getUrlPrefixByType(String val) {
-        String _type = val.toLowerCase();
-        for (SourceType type : SourceType.values()) {
-            if (type.getUrlPrefix().contains(_type)) {
-                return type.getUrlPrefix();
+    public static String getUrlPrefixByType(String type) {
+        String _type = type.toLowerCase();
+        for (SourceType source : SourceType.values()) {
+            if (_type.equals(source.getUrlPrefix())) {
+                return source.getUrlPrefix();
             }
         }
         return "";
+    }
+
+    public static String getGenreByType(String type) {
+        String _type = type.toLowerCase();
+        for (SourceType source : SourceType.values()) {
+            if (_type.contains(source.getGenre())) {
+                return source.getGenre();
+            }
+        }
+        return "";
+    }
+
+    public static boolean isRDB(String type) {
+        String _type = type.toLowerCase();
+        for (SourceType source : SourceType.values()) {
+            if (_type.contains(source.getLabel())) {
+                return source.getGenre() == "rdb";
+            }
+        }
+        return false;
     }
 }
