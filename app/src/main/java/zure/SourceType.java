@@ -75,12 +75,14 @@ public enum SourceType {
     }
 
     public static boolean isRDB(String type) {
-        String _type = type.toLowerCase();
-        for (SourceType source : SourceType.values()) {
-            if (_type.contains(source.getLabel())) {
-                return source.getGenre() == "rdb";
-            }
-        }
-        return false;
+        return getGenreByType(type) == "rdb";
+    }
+
+    public static boolean isNoSQL(String type) {
+        return getGenreByType(type) == "nosql";
+    }
+
+    public static boolean isFile(String type) {
+        return getGenreByType(type) == "file";
     }
 }
