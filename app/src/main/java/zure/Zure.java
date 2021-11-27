@@ -21,35 +21,28 @@ import java.util.stream.Stream;
 
 public class Zure {
 
-    public static final String ok_status = "{{ok_status}}";
-    public static final String ng_status = "{{ng_status}}";
-    public static final String not_yet = "{{notyet_status}}";
-
-    public static final String separate = "{{separate}}";
-    public static final String kv_separate = "{{kv_separate}}";
-
     public static Map<String, List<String>> bulkCheck(List<String> list_A, List<String> list_B, List<String> targets_A,
             List<String> targets_B) {
         List<String> errorInfo = new ArrayList<>();
         for (String data_A : list_A) {
-            String[] kv_A = data_A.split(Pattern.quote(kv_separate));
-            String key_A = kv_A[0].replace(not_yet, "");
+            String[] kv_A = data_A.split(Pattern.quote(Setting.KV_SEPARATE));
+            String key_A = kv_A[0].replace(Setting.NOT_YET, "");
             String val_A = kv_A[1];
             for (String data_B : list_B) {
-                if (!data_B.startsWith(not_yet)) {
+                if (!data_B.startsWith(Setting.NOT_YET)) {
                     continue;
                 }
-                String[] kv_B = data_B.split(Pattern.quote(kv_separate));
-                String key_B = kv_B[0].replace(not_yet, "");
+                String[] kv_B = data_B.split(Pattern.quote(Setting.KV_SEPARATE));
+                String key_B = kv_B[0].replace(Setting.NOT_YET, "");
                 String val_B = kv_B[1];
                 if (key_A.equals(key_B)) {
                     // 照合開始
                     if (val_A.equals(val_B)) {
-                        data_A = data_A.replace(not_yet, ok_status);
-                        data_B = data_B.replace(not_yet, ok_status);
+                        data_A = data_A.replace(Setting.NOT_YET, Setting.OK_STATUS);
+                        data_B = data_B.replace(Setting.NOT_YET, Setting.OK_STATUS);
                     } else {
-                        String[] vals_A = val_A.split(Pattern.quote(separate));
-                        String[] vals_B = val_B.split(Pattern.quote(separate));
+                        String[] vals_A = val_A.split(Pattern.quote(Setting.SEPARATE));
+                        String[] vals_B = val_B.split(Pattern.quote(Setting.SEPARATE));
                         StringBuilder errMsg = new StringBuilder(key_A + "のデータで不整合です。<br/>");
                         for (int i = 0; i < vals_A.length; i++) {
                             // 比較するカラム数は一緒じゃないと困る
@@ -60,8 +53,8 @@ public class Zure {
                             }
                         }
                         errorInfo.add(errMsg.toString());
-                        data_A = data_A.replace(not_yet, ng_status);
-                        data_B = data_B.replace(not_yet, ng_status);
+                        data_A = data_A.replace(Setting.NOT_YET, Setting.NG_STATUS);
+                        data_B = data_B.replace(Setting.NOT_YET, Setting.NG_STATUS);
                     }
                 }
             }
@@ -70,9 +63,9 @@ public class Zure {
         List<String> unknownInfo_A = new ArrayList<>();
         StringBuilder unknown = new StringBuilder("こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
         for (String data_A : list_B) {
-            if (data_A.startsWith(not_yet)) {
-                String[] arr = data_A.split(Pattern.quote(kv_separate));
-                String key = arr[0].replace(not_yet, "");
+            if (data_A.startsWith(Setting.NOT_YET)) {
+                String[] arr = data_A.split(Pattern.quote(Setting.KV_SEPARATE));
+                String key = arr[0].replace(Setting.NOT_YET, "");
                 unknown.append(key);
                 unknown.append("<br/>");
             }
@@ -81,7 +74,7 @@ public class Zure {
         unknown = new StringBuilder("こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
         List<String> unknownInfo_B = new ArrayList<>();
         for (String data_B : list_B) {
-            if (data_B.startsWith(not_yet)) {
+            if (data_B.startsWith(Setting.NOT_YET)) {
                 unknown.append("<br/>");
             }
         }
@@ -192,20 +185,20 @@ public class Zure {
 
             while (rs.next()) {
 
-                StringBuilder keyAndtarget = new StringBuilder(not_yet);
+                StringBuilder keyAndtarget = new StringBuilder(Setting.NOT_YET);
                 int i = 0;
                 for (String keyColumn : targetData.keyColumns) {
                     if (i++ != 0) {
-                        keyAndtarget.append(separate);
+                        keyAndtarget.append(Setting.SEPARATE);
                     }
                     keyAndtarget.append(String.valueOf(rs.getObject(keyColumn)));
                 }
-                keyAndtarget.append(kv_separate); // この文字列でsplitしてkeyとtargetを判別出来るようにする
+                keyAndtarget.append(Setting.KV_SEPARATE); // この文字列でsplitしてkeyとtargetを判別出来るようにする
 
                 i = 0;
                 for (String targetColumn : targetData.targetColumns) {
                     if (i++ != 0) {
-                        keyAndtarget.append(separate);
+                        keyAndtarget.append(Setting.SEPARATE);
                     }
                     keyAndtarget.append(String.valueOf(rs.getObject(targetColumn)));
                 }
@@ -239,16 +232,16 @@ public class Zure {
             int ng = 0;
             int notyet = 0;
             for (String a : list_A) {
-                if (a.startsWith(ok_status)) {
+                if (a.startsWith(Setting.OK_STATUS)) {
                     ok++;
-                } else if (a.startsWith(ng_status)) {
+                } else if (a.startsWith(Setting.NG_STATUS)) {
                     ng++;
                 } else {
                     notyet++;
                 }
             }
 
-            lines = Files.lines(Paths.get("../result/static/template.txt"));
+            lines = Files.lines(Paths.get(Setting.RUSULT_TEMPLATE_FILE_PATH));
 
             String content = lines.collect(Collectors.joining(System.lineSeparator()));
             content = content.replace("{{a_count}}", String.valueOf(list_A.size()))

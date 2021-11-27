@@ -7,17 +7,17 @@ public enum SourceType {
     SQLServer("rdb", "sqlserver", "com.microsoft.sqlserver.jdbc.SQLServerDriver", "test"),
     SQLite("rdb", "sqlite", "org.sqlite.JDBC", "jdbc:sqlite:jdbc:sqlite:jdbc:sqlite:"),
     DB2("rdb", "db2", "com.ibm.db2.jcc.DB2Driver", "testtesttesttesttesttesttesttesttest"),
-    Redshift("rdb", "redshift", "com.ibm.db2.jcc.DB2Driver", "test"),
-    MongoDB("nosql", "mongodb", "com.ibm.db2.jcc.DB2Driver", "test"),
-    Elasticsearch("nosql", "elasticsearch", "com.ibm.db2.jcc.DB2Driver", "test"),
-    Redis("nosql", "redis", "com.ibm.db2.jcc.DB2Driver", "testtesttesttesttesttesttesttesttesttest"),
-    CSV("file", "csv", "", "testtesttesttesttesttesttesttesttesttesttesttest"),
-    TSV("file", "tsv", "", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"),
-    JSON("file", "json", "", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"),
-    XML("file", "xml", "", "test");
+    Redshift("rdb", "redshift", "com.amazon.redshift.jdbc.Driver", "test"),
+    MongoDB("nosql", "mongodb", "mongodb.jdbc.MongoDriver", "test"),
+    Elasticsearch("nosql", "elasticsearch", "--", "test"),
+    Redis("nosql", "redis", "--", "testtesttesttesttesttesttesttesttesttest"),
+    CSV("file", "csv", "--", "testtesttesttesttesttesttesttesttesttesttesttest"),
+    TSV("file", "tsv", "--", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"),
+    JSON("file", "json", "--", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"),
+    XML("file", "xml", "--", "test");
 
     private String genre;
-    private String label;
+    private String label; // pk
     private String driverName;
     private String urlPrefix;
 
