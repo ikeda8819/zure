@@ -2,12 +2,13 @@ package zure;
 
 import java.util.List;
 
-class TargetData {
+public class TargetData {
 
     public String id;
 
     public String type;
 
+    public String url;
     public String host;
     public String port;
     public String username;
@@ -24,8 +25,12 @@ class TargetData {
     public String checkResult;
 
     public String getDBUrl() {
-        String url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
-        return url;
+        // String templ =
+        // "jdbc:{{type}}://{{host}}:{{port}}/{{database}}?user={{user}}&password={{password}}";
+        // String url;
+        // url = "jdbc:postgresql://" + host + ":" + port + "/" + database;
+        // url = "jdbc:mysql://" + host + ":" + port + "/" + database;
+        return null;
     }
 
     public boolean isSQLFile() {

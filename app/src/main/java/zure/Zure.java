@@ -90,18 +90,15 @@ public class Zure {
 
     public static TargetData loadDataFromFile(String filename) throws IOException {
         List<String> list = new ArrayList<>();
-        Files.lines(Paths.get(filename)).forEach(e -> list.add(e));
-        return targetDataMapping(list);
-    }
-
-    private static TargetData targetDataMapping(List<String> list) {
+        Files.lines(Paths.get("../config/" + filename)).forEach(e -> list.add(e));
         TargetData data = new TargetData();
         for (String line : list) {
             String _line = line.trim();
             if ("".equals(_line)) {
                 continue;
             }
-            String[] kv = _line.split(":");
+
+            String[] kv = _line.split(":", 2);
             if (kv.length != 2) {
                 continue;
             }
@@ -110,6 +107,8 @@ public class Zure {
 
             if ("type".equals(key)) {
                 data.type = val;
+            } else if ("url".equals(key)) {
+                data.url = val;
             } else if ("host".equals(key)) {
                 data.host = val;
             } else if ("port".equals(key)) {

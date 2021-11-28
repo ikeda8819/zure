@@ -7,6 +7,11 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
+import com.mongodb.client.MongoClient;
+
+import zure.service.MongoDbService;
+import zure.service.RdbService;
+
 public class App {
 
     public static void main(String[] args) {
@@ -14,32 +19,37 @@ public class App {
             return;
         }
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>.args[0]->" + args[0] + ", args[1]->" + args[1]);
-
-        TargetData data_A = null;
-        TargetData data_B = null;
-        Connection connection_A = null;
-        Connection connection_B = null;
+        Connection connection = null;
+        MongoClient mongoClient = null;
+        RdbService rdbService = new RdbService();
+        MongoDbService mongoDbService = new MongoDbService();
         try {
 
-            data_A = Zure.loadDataFromFile(args[0]);
-            data_B = Zure.loadDataFromFile(args[1]);
+            TargetData data_A = Zure.loadDataFromFile(args[0]);
+            TargetData data_B = Zure.loadDataFromFile(args[1]);
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.loadDataFromFile complete");
 
-            connection_A = DataSource.getConnection(data_A.type, data_A.host, data_A.port, data_A.username,
-                    data_A.password, data_A.schema, data_A.database);
-            connection_B = DataSource.getConnection(data_B.type, data_B.host, data_B.port, data_B.username,
-                    data_B.password, data_B.schema, data_B.database);
+            List<String> dataList_A = null;
+            if (SourceType.isRDB(data_A.type)) {
+                dataList_A = rdbService.execute(connection, data_A);
+            } else if (SourceType.isNoSQL(data_A.type)) {
+                dataList_A = mongoDbService.execute(mongoClient, data_A);
 
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>.getConnection complete");
+            } else if (SourceType.isFile(data_A.type)) {
 
-            List<String> dataList_A = Zure.executeSQL(connection_A,
-                    Zure.buildSQL(data_A.table, data_A.keyColumns, data_A.targetColumns), data_A);
-            List<String> dataList_B = Zure.executeSQL(connection_B,
-                    Zure.buildSQL(data_B.table, data_B.keyColumns, data_B.targetColumns), data_B);
+            }
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>.dataList_A complete");
 
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>.executeSQL complete");
+            List<String> dataList_B = null;
+            if (SourceType.isRDB(data_B.type)) {
+                dataList_B = rdbService.execute(connection, data_B);
+            } else if (SourceType.isNoSQL(data_B.type)) {
+                dataList_B = mongoDbService.execute(mongoClient, data_B);
+            } else if (SourceType.isFile(data_B.type)) {
+
+            }
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>.dataList_B complete");
 
             Map<String, List<String>> errorInfo = Zure.bulkCheck(dataList_A, dataList_B, data_A.targetColumns,
                     data_B.targetColumns);
@@ -55,11 +65,11 @@ public class App {
             e1.printStackTrace();
         } finally {
             try {
-                if (connection_A != null) {
-                    connection_A.close();
+                if (connection != null) {
+                    connection.close();
                 }
-                if (connection_B != null) {
-                    connection_B.close();
+                if (mongoClient != null) {
+                    mongoClient.close();
                 }
             } catch (Exception e2) {
                 e2.printStackTrace();
