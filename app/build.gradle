@@ -29,6 +29,12 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.35.0.1'
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     implementation 'mysql:mysql-connector-java:8.0.22'
+    // https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
+    implementation 'com.microsoft.sqlserver:mssql-jdbc:9.4.0.jre11'
+    // https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11
+    implementation 'com.oracle.database.jdbc:ojdbc11:21.3.0.0'
+    // https://mvnrepository.com/artifact/com.ibm.db2/jcc
+    implementation 'com.ibm.db2:jcc:11.5.6.0'
 
     // NoSQL drivers
     // https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
