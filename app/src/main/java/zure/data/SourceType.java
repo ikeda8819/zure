@@ -1,4 +1,4 @@
-package zure;
+package zure.data;
 
 public enum SourceType {
     MySQL("rdb", "mysql", "com.mysql.jdbc.Driver", "jdbc:mysql:", "RdbService"),

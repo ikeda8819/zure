@@ -1,4 +1,4 @@
-package zure;
+package zure.data;
 
 public class Setting {
 
