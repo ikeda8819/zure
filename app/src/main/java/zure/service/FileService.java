@@ -3,7 +3,7 @@ package zure.service;
 import java.util.List;
 
 import zure.Executable;
-import zure.TargetData;
+import zure.data.TargetData;
 
 public class FileService implements Executable {
 

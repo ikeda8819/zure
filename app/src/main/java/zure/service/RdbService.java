@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zure.Executable;
-import zure.Setting;
-import zure.TargetData;
+import zure.data.Setting;
+import zure.data.TargetData;
 
 public class RdbService implements Executable {
 

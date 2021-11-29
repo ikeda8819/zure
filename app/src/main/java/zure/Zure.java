@@ -19,6 +19,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import zure.data.Setting;
+import zure.data.TargetData;
+
 public class Zure {
 
     public static Map<String, List<String>> bulkCheck(List<String> list_A, List<String> list_B, List<String> targets_A,
@@ -81,7 +84,7 @@ public class Zure {
         unknownInfo_B.add(unknown.toString());
 
         Map<String, List<String>> map = new HashMap<>();
-        map.put("ng", errorInfo);
+        map.put("errorInfo", errorInfo);
         map.put("unknown_A", unknownInfo_A);
         map.put("unknown_B", unknownInfo_B);
 
@@ -246,7 +249,7 @@ public class Zure {
             content = content.replace("{{a_count}}", String.valueOf(list_A.size()))
                     .replace("{{b_count}}", String.valueOf(list_B.size())).replace("{{ok_count}}", String.valueOf(ok))
                     .replace("{{ng_count}}", String.valueOf(ng)).replace("{{?_count}}", String.valueOf(notyet))
-                    .replace("{{ng_detail}}", errorMAp.get("ng").stream().collect(Collectors.joining("<br/>")))
+                    .replace("{{ng_detail}}", errorMAp.get("errorInfo").stream().collect(Collectors.joining("<br/>")))
                     .replace("{{???_A}}", errorMAp.get("unknown_A").stream().collect(Collectors.joining("<br/>")))
                     .replace("{{???_B}}", errorMAp.get("unknown_B").stream().collect(Collectors.joining("<br/>")));
 

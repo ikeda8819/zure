@@ -11,6 +11,8 @@ import java.util.Map;
 
 import com.mongodb.client.MongoClient;
 
+import zure.data.SourceType;
+import zure.data.TargetData;
 import zure.service.FileService;
 import zure.service.MongoDbService;
 import zure.service.RdbService;
@@ -22,6 +24,7 @@ public class App {
             return;
         }
 
+        // connection系は全部クローズできるようにここで宣言する
         Connection connection = null;
         MongoClient mongoClient = null;
         Map<String, Object> cilent = new HashMap<>();
