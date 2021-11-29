@@ -4,11 +4,14 @@
 package zure;
 
 import java.sql.Connection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.mongodb.client.MongoClient;
 
+import zure.service.FileService;
 import zure.service.MongoDbService;
 import zure.service.RdbService;
 
@@ -21,8 +24,15 @@ public class App {
 
         Connection connection = null;
         MongoClient mongoClient = null;
-        RdbService rdbService = new RdbService();
-        MongoDbService mongoDbService = new MongoDbService();
+        Map<String, Object> cilent = new HashMap<>();
+        cilent.put("connection", connection);
+        cilent.put("mongoClient", mongoClient);
+
+        Map<String, Executable> service = new HashMap<>();
+        service.put("RdbService", new RdbService());
+        service.put("MongoDbService", new MongoDbService());
+        service.put("FileService", new FileService());
+
         try {
 
             TargetData data_A = Zure.loadDataFromFile(args[0]);
@@ -30,25 +40,10 @@ public class App {
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.loadDataFromFile complete");
 
-            List<String> dataList_A = null;
-            if (SourceType.isRDB(data_A.type)) {
-                dataList_A = rdbService.execute(connection, data_A);
-            } else if (SourceType.isNoSQL(data_A.type)) {
-                dataList_A = mongoDbService.execute(mongoClient, data_A);
-
-            } else if (SourceType.isFile(data_A.type)) {
-
-            }
+            List<String> dataList_A = getDataList(data_A, cilent, service);
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.dataList_A complete");
 
-            List<String> dataList_B = null;
-            if (SourceType.isRDB(data_B.type)) {
-                dataList_B = rdbService.execute(connection, data_B);
-            } else if (SourceType.isNoSQL(data_B.type)) {
-                dataList_B = mongoDbService.execute(mongoClient, data_B);
-            } else if (SourceType.isFile(data_B.type)) {
-
-            }
+            List<String> dataList_B = getDataList(data_B, cilent, service);
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.dataList_B complete");
 
             Map<String, List<String>> errorInfo = Zure.bulkCheck(dataList_A, dataList_B, data_A.targetColumns,
@@ -73,5 +68,17 @@ public class App {
                 e2.printStackTrace();
             }
         }
+    }
+
+    private static List<String> getDataList(TargetData data, Map<String, Object> cilent,
+            Map<String, Executable> service) throws Exception {
+        if (SourceType.isRDB(data.type)) {
+            return service.get("RdbService").execute(cilent.get("connection"), data);
+        } else if (SourceType.isNoSQL(data.type)) {
+            return service.get("MongoDbService").execute(cilent.get("mongoClient"), data);
+        } else if (SourceType.isFile(data.type)) {
+            return service.get("FileService").execute(cilent.get("mongoClient"), data);
+        }
+        return Collections.emptyList();
     }
 }

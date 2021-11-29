@@ -72,6 +72,10 @@ public enum SourceType {
         return getByType(type).genre;
     }
 
+    public static Class<?> getServiceClassByType(String type) throws ClassNotFoundException {
+        return Class.forName("zure.service." + getByType(type).serviceClass);
+    }
+
     public static boolean isRDB(String type) {
         return getGenreByType(type) == "rdb";
     }
