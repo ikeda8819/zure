@@ -53,12 +53,10 @@ public class App {
 
             Map<String, List<String>> errorInfo = Zure.bulkCheck(dataList_A, dataList_B, data_A.targetColumns,
                     data_B.targetColumns);
-
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.bulkCheck complete");
 
             // 結果出力(html or log)
             Zure.outputResultFile(errorInfo, dataList_A, dataList_B);
-
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.outputFile complete");
 
         } catch (Exception e1) {

@@ -2,6 +2,7 @@ package zure.service;
 
 import java.sql.Statement;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,6 @@ import java.util.List;
 import zure.Executable;
 import zure.Setting;
 import zure.TargetData;
-import zure.ZureDataSource;
 
 public class RdbService implements Executable {
 
@@ -30,7 +30,7 @@ public class RdbService implements Executable {
 
         List<String> resultList = new ArrayList<>();
 
-        connection = ZureDataSource.getConnection(loadedTargetData.url, loadedTargetData.username,
+        connection = DriverManager.getConnection(loadedTargetData.url, loadedTargetData.username,
                 loadedTargetData.password);
         Statement statement = ((Connection) connection).createStatement();
         ResultSet rs = statement.executeQuery(sql);
