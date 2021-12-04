@@ -28,11 +28,17 @@ public class Zure {
     public static Map<String, List<String>> bulkCheck(List<String> list_A, List<String> list_B, List<String> targets_A,
             List<String> targets_B) {
         List<String> errorInfo = new ArrayList<>();
+
+        int indexA = -1;
         for (String data_A : list_A) {
+            indexA++;
             String[] kv_A = data_A.split(Pattern.quote(Setting.KV_SEPARATE));
             String key_A = kv_A[0].replace(Setting.NOT_YET, "");
             String val_A = kv_A[1];
+            int indexB = -1;
             for (String data_B : list_B) {
+                indexB++;
+                System.out.println("data_Bdata_Bdata_Bdata_Bdata_Bdata_B>" + data_B);
                 if (!data_B.startsWith(Setting.NOT_YET)) {
                     continue;
                 }
@@ -42,8 +48,8 @@ public class Zure {
                 if (key_A.equals(key_B)) {
                     // 照合開始
                     if (val_A.equals(val_B)) {
-                        data_A = data_A.replace(Setting.NOT_YET, Setting.OK_STATUS);
-                        data_B = data_B.replace(Setting.NOT_YET, Setting.OK_STATUS);
+                        list_A.set(indexA, data_A.replace(Setting.NOT_YET, Setting.OK_STATUS));
+                        list_B.set(indexB, data_B.replace(Setting.NOT_YET, Setting.OK_STATUS));
                     } else {
                         String[] vals_A = val_A.split(Pattern.quote(Setting.SEPARATE));
                         String[] vals_B = val_B.split(Pattern.quote(Setting.SEPARATE));
@@ -57,16 +63,16 @@ public class Zure {
                             }
                         }
                         errorInfo.add(errMsg.toString());
-                        data_A = data_A.replace(Setting.NOT_YET, Setting.NG_STATUS);
-                        data_B = data_B.replace(Setting.NOT_YET, Setting.NG_STATUS);
+                        list_A.set(indexA, data_A.replace(Setting.NOT_YET, Setting.NG_STATUS));
+                        list_B.set(indexB, data_B.replace(Setting.NOT_YET, Setting.NG_STATUS));
                     }
                 }
             }
         }
 
         List<String> unknownInfo_A = new ArrayList<>();
-        StringBuilder unknown = new StringBuilder("こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
-        for (String data_A : list_B) {
+        StringBuilder unknown = new StringBuilder("UNKNOWN DATA こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
+        for (String data_A : list_A) {
             if (data_A.startsWith(Setting.NOT_YET)) {
                 String[] arr = data_A.split(Pattern.quote(Setting.KV_SEPARATE));
                 String key = arr[0].replace(Setting.NOT_YET, "");
@@ -75,7 +81,7 @@ public class Zure {
             }
         }
         unknownInfo_A.add(unknown.toString());
-        unknown = new StringBuilder("こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
+        unknown = new StringBuilder("UNKNOWN DATA こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
         List<String> unknownInfo_B = new ArrayList<>();
         for (String data_B : list_B) {
             if (data_B.startsWith(Setting.NOT_YET)) {
@@ -91,6 +97,9 @@ public class Zure {
         map.put("errorInfo", errorInfo);
         map.put("unknown_A", unknownInfo_A);
         map.put("unknown_B", unknownInfo_B);
+
+        System.out.println("list_Alist_Alist_Alist_Alist_Alist_A>" + list_A);
+        System.out.println("list_Blist_Blist_Blist_Blist_Blist_B>" + list_B);
 
         return map;
     }
@@ -236,6 +245,7 @@ public class Zure {
 
         Stream<String> lines = null;
         try {
+            Files.createFile(Paths.get(filepath));
             int ok = 0;
             int ng = 0;
             int notyet = 0;

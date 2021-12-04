@@ -12,6 +12,10 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.0.0'
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()

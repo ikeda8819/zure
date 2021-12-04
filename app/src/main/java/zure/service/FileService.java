@@ -58,6 +58,8 @@ public class FileService implements Executable {
                 keyAndtarget.append(dataArr[keyColumns.get(j)]);
             }
 
+            keyAndtarget.append(Setting.KV_SEPARATE);
+
             for (int j = 0; j < targetColumns.size(); j++) {
                 if (j != 0) {
                     keyAndtarget.append(Setting.SEPARATE);
@@ -68,7 +70,8 @@ public class FileService implements Executable {
             returnList.add(keyAndtarget.toString());
         }
 
-        System.out.println("returnListreturnListreturnListreturnListreturnList--->>" + returnList);
+        // System.out.println("returnListreturnListreturnListreturnListreturnList--->>"
+        // + returnList);
         return returnList;
     }
 
