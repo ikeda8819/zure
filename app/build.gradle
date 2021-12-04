@@ -38,7 +38,6 @@ dependencies {
     // https://mvnrepository.com/artifact/com.amazon.redshift/redshift-jdbc42
     implementation 'com.amazon.redshift:redshift-jdbc42:2.1.0.1'
 
-
     // NoSQL drivers
     // https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
     implementation 'org.mongodb:mongo-java-driver:3.12.5'

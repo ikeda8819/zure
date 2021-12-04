@@ -19,6 +19,9 @@ public class TargetData {
     public String queryFile;
     public String table;
 
+    public String file;
+    public String header;
+
     public List<String> keyColumns;
     public List<String> targetColumns;
 

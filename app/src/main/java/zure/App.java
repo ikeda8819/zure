@@ -37,17 +37,21 @@ public class App {
         service.put("FileService", new FileService());
 
         try {
-
             TargetData data_A = Zure.loadDataFromFile(args[0]);
-            TargetData data_B = Zure.loadDataFromFile(args[1]);
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>.data_A complete");
 
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>.loadDataFromFile complete");
+            TargetData data_B = Zure.loadDataFromFile(args[1]);
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>.data_B complete");
 
             List<String> dataList_A = getDataList(data_A, cilent, service);
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.dataList_A complete");
 
             List<String> dataList_B = getDataList(data_B, cilent, service);
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.dataList_B complete");
+
+            if (!isReady(dataList_A, dataList_B)) {
+                return;
+            }
 
             Map<String, List<String>> errorInfo = Zure.bulkCheck(dataList_A, dataList_B, data_A.targetColumns,
                     data_B.targetColumns);
@@ -73,13 +77,19 @@ public class App {
         }
     }
 
+    private static boolean isReady(List<String> dataList_A, List<String> dataList_B) {
+        return (dataList_A != null && dataList_A.size() > 1) && (dataList_B != null && dataList_B.size() > 1);
+    }
+
     private static List<String> getDataList(TargetData data, Map<String, Object> cilent,
             Map<String, Executable> service) throws Exception {
         if (SourceType.isRDB(data.type)) {
             return service.get("RdbService").execute(cilent.get("connection"), data);
         } else if (SourceType.isNoSQL(data.type)) {
+            System.out.println("isNoSQLisNoSQLisNoSQLisNoSQLisNoSQLisNoSQLisNoSQL");
             return service.get("MongoDbService").execute(cilent.get("mongoClient"), data);
         } else if (SourceType.isFile(data.type)) {
+            System.out.println("isFileisFileisFileisFileisFileisFileisFileisFile");
             return service.get("FileService").execute(cilent.get("mongoClient"), data);
         }
         return Collections.emptyList();

@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,9 @@ public class Zure {
         List<String> unknownInfo_B = new ArrayList<>();
         for (String data_B : list_B) {
             if (data_B.startsWith(Setting.NOT_YET)) {
+                String[] arr = data_B.split(Pattern.quote(Setting.KV_SEPARATE));
+                String key = arr[0].replace(Setting.NOT_YET, "");
+                unknown.append(key);
                 unknown.append("<br/>");
             }
         }
@@ -93,7 +97,7 @@ public class Zure {
 
     public static TargetData loadDataFromFile(String filename) throws IOException {
         List<String> list = new ArrayList<>();
-        Files.lines(Paths.get("../config/" + filename)).forEach(e -> list.add(e));
+        Files.lines(Paths.get(Setting.CONFIG_FILE_ROOT_PATH + filename)).forEach(e -> list.add(e));
         TargetData data = new TargetData();
         for (String line : list) {
             String _line = line.trim();
@@ -126,6 +130,10 @@ public class Zure {
                 data.queryFile = val;
             } else if ("table".equals(key)) {
                 data.table = val;
+            } else if ("file".equals(key)) {
+                data.file = val;
+            } else if ("header".equals(key)) {
+                data.header = val;
             }
         }
 
@@ -228,8 +236,6 @@ public class Zure {
 
         Stream<String> lines = null;
         try {
-            Files.createFile(Paths.get(filepath));
-
             int ok = 0;
             int ng = 0;
             int notyet = 0;
