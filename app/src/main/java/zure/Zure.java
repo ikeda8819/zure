@@ -53,13 +53,15 @@ public class Zure {
                     } else {
                         String[] vals_A = val_A.split(Pattern.quote(Setting.SEPARATE));
                         String[] vals_B = val_B.split(Pattern.quote(Setting.SEPARATE));
-                        StringBuilder errMsg = new StringBuilder(key_A + "のデータで不整合です。<br/>");
+                        StringBuilder errMsg = new StringBuilder(
+                                "<div style='font-weight:bold;'>■key:" + key_A + "のデータで不整合です。</div>");
                         for (int i = 0; i < vals_A.length; i++) {
                             // 比較するカラム数は一緒じゃないと困る
                             if (!vals_A[i].equals(vals_B[i])) {
-                                errMsg.append(targets_A.get(i) + "と" + targets_B.get(i) + "が違います。").append("<br/>");
-                                errMsg.append(targets_A.get(i) + "->" + vals_A[i]).append("<br/>");
-                                errMsg.append(targets_B.get(i) + "->" + vals_B[i]).append("<br/>");
+                                errMsg.append("・" + targets_A.get(i) + "と" + targets_B.get(i) + "が違います。")
+                                        .append("<br/>");
+                                errMsg.append("　　" + targets_A.get(i) + "->" + vals_A[i]).append("<br/>");
+                                errMsg.append("　　" + targets_B.get(i) + "->" + vals_B[i]).append("<br/>");
                             }
                         }
                         errorInfo.add(errMsg.toString());
@@ -254,6 +256,13 @@ public class Zure {
                     ok++;
                 } else if (a.startsWith(Setting.NG_STATUS)) {
                     ng++;
+                } else {
+                    notyet++;
+                }
+            }
+            for (String b : list_B) {
+                if (b.startsWith(Setting.OK_STATUS)) {
+                } else if (b.startsWith(Setting.NG_STATUS)) {
                 } else {
                     notyet++;
                 }

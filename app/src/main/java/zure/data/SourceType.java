@@ -72,6 +72,10 @@ public enum SourceType {
         return getByType(type).genre;
     }
 
+    public static String getLabelByType(String type) {
+        return getByType(type).label;
+    }
+
     public static Class<?> getServiceClassByType(String type) throws ClassNotFoundException {
         return Class.forName("zure.service." + getByType(type).serviceClass);
     }

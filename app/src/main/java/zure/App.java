@@ -86,10 +86,12 @@ public class App {
         if (SourceType.isRDB(data.type)) {
             return service.get("RdbService").execute(cilent.get("connection"), data);
         } else if (SourceType.isNoSQL(data.type)) {
-            System.out.println("isNoSQLisNoSQLisNoSQLisNoSQLisNoSQLisNoSQLisNoSQL");
-            return service.get("MongoDbService").execute(cilent.get("mongoClient"), data);
+            String label = SourceType.getLabelByType(data.type);
+            if ("mongodb".equals(label)) {
+                return service.get("MongoDbService").execute(cilent.get("mongoClient"), data);
+            } else if ("".equals(label)) {
+            }
         } else if (SourceType.isFile(data.type)) {
-            System.out.println("isFileisFileisFileisFileisFileisFileisFileisFile");
             return service.get("FileService").execute(cilent.get("mongoClient"), data);
         }
         return Collections.emptyList();
