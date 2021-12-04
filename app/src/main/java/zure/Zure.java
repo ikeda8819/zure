@@ -12,7 +12,6 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,35 +72,33 @@ public class Zure {
         }
 
         List<String> unknownInfo_A = new ArrayList<>();
-        StringBuilder unknown = new StringBuilder("UNKNOWN DATA こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
+        StringBuilder unknown_A = new StringBuilder("UNKNOWN DATA A こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
         for (String data_A : list_A) {
             if (data_A.startsWith(Setting.NOT_YET)) {
                 String[] arr = data_A.split(Pattern.quote(Setting.KV_SEPARATE));
                 String key = arr[0].replace(Setting.NOT_YET, "");
-                unknown.append(key);
-                unknown.append("<br/>");
+                unknown_A.append(key);
+                unknown_A.append("<br/>");
             }
         }
-        unknownInfo_A.add(unknown.toString());
-        unknown = new StringBuilder("UNKNOWN DATA こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
+        unknownInfo_A.add(unknown_A.toString());
+
         List<String> unknownInfo_B = new ArrayList<>();
+        StringBuilder unknown_B = new StringBuilder("UNKNOWN DATA B こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
         for (String data_B : list_B) {
             if (data_B.startsWith(Setting.NOT_YET)) {
                 String[] arr = data_B.split(Pattern.quote(Setting.KV_SEPARATE));
                 String key = arr[0].replace(Setting.NOT_YET, "");
-                unknown.append(key);
-                unknown.append("<br/>");
+                unknown_B.append(key);
+                unknown_B.append("<br/>");
             }
         }
-        unknownInfo_B.add(unknown.toString());
+        unknownInfo_B.add(unknown_B.toString());
 
         Map<String, List<String>> map = new HashMap<>();
         map.put("errorInfo", errorInfo);
         map.put("unknown_A", unknownInfo_A);
         map.put("unknown_B", unknownInfo_B);
-
-        System.out.println("list_Alist_Alist_Alist_Alist_Alist_A>" + list_A);
-        System.out.println("list_Blist_Blist_Blist_Blist_Blist_B>" + list_B);
 
         return map;
     }
@@ -275,8 +272,8 @@ public class Zure {
                     .replace("{{b_count}}", String.valueOf(list_B.size())).replace("{{ok_count}}", String.valueOf(ok))
                     .replace("{{ng_count}}", String.valueOf(ng)).replace("{{?_count}}", String.valueOf(notyet))
                     .replace("{{ng_detail}}", errorMAp.get("errorInfo").stream().collect(Collectors.joining("<br/>")))
-                    .replace("{{???_A}}", errorMAp.get("unknown_A").stream().collect(Collectors.joining("<br/>")))
-                    .replace("{{???_B}}", errorMAp.get("unknown_B").stream().collect(Collectors.joining("<br/>")));
+                    .replace("{{unknown_A}}", errorMAp.get("unknown_A").stream().collect(Collectors.joining("<br/>")))
+                    .replace("{{unknown_B}}", errorMAp.get("unknown_B").stream().collect(Collectors.joining("<br/>")));
 
             Files.write(Paths.get(filepath), List.of(content), Charset.forName("UTF-8"), StandardOpenOption.WRITE);
 
