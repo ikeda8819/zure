@@ -37,7 +37,6 @@ public class Zure {
             int indexB = -1;
             for (String data_B : list_B) {
                 indexB++;
-                System.out.println("data_Bdata_Bdata_Bdata_Bdata_Bdata_B>" + data_B);
                 if (!data_B.startsWith(Setting.NOT_YET)) {
                     continue;
                 }
@@ -72,7 +71,7 @@ public class Zure {
         }
 
         List<String> unknownInfo_A = new ArrayList<>();
-        StringBuilder unknown_A = new StringBuilder("UNKNOWN DATA A こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
+        StringBuilder unknown_A = new StringBuilder(" こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
         for (String data_A : list_A) {
             if (data_A.startsWith(Setting.NOT_YET)) {
                 String[] arr = data_A.split(Pattern.quote(Setting.KV_SEPARATE));
@@ -84,7 +83,7 @@ public class Zure {
         unknownInfo_A.add(unknown_A.toString());
 
         List<String> unknownInfo_B = new ArrayList<>();
-        StringBuilder unknown_B = new StringBuilder("UNKNOWN DATA B こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
+        StringBuilder unknown_B = new StringBuilder("こちらは重複または比較対象のデータが存在しない可能性があります。<br/>");
         for (String data_B : list_B) {
             if (data_B.startsWith(Setting.NOT_YET)) {
                 String[] arr = data_B.split(Pattern.quote(Setting.KV_SEPARATE));
@@ -193,8 +192,6 @@ public class Zure {
     }
 
     public static List<String> executeSQL(Connection connection, String sql, TargetData targetData) {
-        // System.out.println(">>>>>>>>>>>>>>>>>>executeSQL.sql:" + sql);
-
         List<String> resultList = new ArrayList<>();
 
         try {
@@ -220,9 +217,6 @@ public class Zure {
                     }
                     keyAndtarget.append(String.valueOf(rs.getObject(targetColumn)));
                 }
-
-                // System.out.println("keytarget=" + keyAndtarget.toString());
-
                 resultList.add(keyAndtarget.toString());
             }
 
