@@ -25,7 +25,7 @@ public class TargetData {
     public List<String> keyColumns;
     public List<String> targetColumns;
 
-    public boolean isSQLFile() {
-        return (queryFile != null && queryFile != "") && (table == null && table == "");
+    public boolean hasSQLFile() {
+        return (queryFile != null && queryFile != "") && (table == null || table == "");
     }
 }

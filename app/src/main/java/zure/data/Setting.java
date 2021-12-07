@@ -10,6 +10,8 @@ public class Setting {
 
     public static final String FILE_ROOT_PATH = "../file/";
 
+    public static final String QUERY_FILE_PATH = "../query/";
+
     public static final String OK_STATUS = "{{ok_status}}";
     public static final String NG_STATUS = "{{ng_status}}";
     public static final String NOT_YET = "{{notyet_status}}";

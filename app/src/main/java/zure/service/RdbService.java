@@ -1,6 +1,8 @@
 package zure.service;
 
 import java.sql.Statement;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -15,18 +17,29 @@ public class RdbService implements Executable {
 
     @Override
     public List<String> execute(Object connection, TargetData loadedTargetData) throws Exception {
-        StringBuilder columns = new StringBuilder();
-        for (int i = 0; i < loadedTargetData.keyColumns.size(); i++) {
-            if (i != 0) {
-                columns.append(", ");
+        String sql = "";
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>.loadedTargetData.hasSQLFile():" + loadedTargetData.hasSQLFile());
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>.loadedTargetData.hasSQLFile():" + loadedTargetData.queryFile);
+        if (loadedTargetData.hasSQLFile()) {
+            List<String> list = new ArrayList<>();
+            Files.lines(Paths.get(Setting.QUERY_FILE_PATH + loadedTargetData.queryFile)).forEach(e -> list.add(e));
+            sql = String.join(" ", list);
+        } else {
+            StringBuilder columns = new StringBuilder();
+            for (int i = 0; i < loadedTargetData.keyColumns.size(); i++) {
+                if (i != 0) {
+                    columns.append(", ");
+                }
+                columns.append(loadedTargetData.keyColumns.get(i));
             }
-            columns.append(loadedTargetData.keyColumns.get(i));
+            for (int i = 0; i < loadedTargetData.targetColumns.size(); i++) {
+                columns.append(", " + loadedTargetData.targetColumns.get(i));
+            }
+            sql = "select {{columns}} from {{table}};".replace("{{columns}}", columns.toString()).replace("{{table}}",
+                    loadedTargetData.table);
         }
-        for (int i = 0; i < loadedTargetData.targetColumns.size(); i++) {
-            columns.append(", " + loadedTargetData.targetColumns.get(i));
-        }
-        String sql = "select {{columns}} from {{table}};".replace("{{columns}}", columns.toString())
-                .replace("{{table}}", loadedTargetData.table);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>.execute:sql:" + sql);
 
         List<String> resultList = new ArrayList<>();
 

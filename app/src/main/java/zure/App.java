@@ -89,7 +89,7 @@ public class App {
             String label = SourceType.getLabelByType(data.type);
             if ("mongodb".equals(label)) {
                 return service.get("MongoDbService").execute(cilent.get("mongoClient"), data);
-            } else if ("".equals(label)) {
+            } else {
             }
         } else if (SourceType.isFile(data.type)) {
             return service.get("FileService").execute(cilent.get("mongoClient"), data);
