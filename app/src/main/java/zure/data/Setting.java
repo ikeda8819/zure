@@ -2,6 +2,7 @@ package zure.data;
 
 public class Setting {
 
+    // develop start
     public static final String CONFIG_FILE_ROOT_PATH = "../config/";
 
     public static final String RESULT_FILE_PATH = "../result/" + "result-" + "{{replaceStr}}" + ".html";
@@ -11,6 +12,11 @@ public class Setting {
     public static final String FILE_ROOT_PATH = "../file/";
 
     public static final String QUERY_FILE_PATH = "../query/";
+    // develop end
+
+    // product start
+
+    // product end
 
     public static final String OK_STATUS = "{{ok_status}}";
     public static final String NG_STATUS = "{{ng_status}}";

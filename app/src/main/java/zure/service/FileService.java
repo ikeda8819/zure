@@ -30,19 +30,29 @@ public class FileService implements Executable {
         }
 
         // ヘッダー有の場合は、番号指定or項目名指定で可能
-        boolean hasHeader = "true".equals(loadedData.header);
+        boolean hasHeader = "true".equals(loadedData.header.trim());
 
-        // System.out.println();
-
-        // ヘッダー有の場合は
-        // ヘッダーありで項目名指定の場合は、こちらで項目名から番号指定に変更する
-        // list.remove(0);
-
-        boolean numbermode = true;
-
-        List<Integer> keyColumns = loadedData.keyColumns.stream().map(Integer::parseInt).collect(Collectors.toList());
-        List<Integer> targetColumns = loadedData.targetColumns.stream().map(Integer::parseInt)
-                .collect(Collectors.toList());
+        List<Integer> keyColumns = new ArrayList<>();
+        List<Integer> targetColumns = new ArrayList<>();
+        if (hasHeader) {
+            String header = list.get(0);
+            String[] arr = header.split(",");
+            for (int i = 0; i < arr.length; i++) {
+                for (int j = 0; j < loadedData.keyColumns.size(); j++) {
+                    if (arr[i].equals(loadedData.keyColumns.get(j))) {
+                        keyColumns.add(i);
+                    }
+                }
+                for (int j = 0; j < loadedData.targetColumns.size(); j++) {
+                    if (arr[i].equals(loadedData.targetColumns.get(j))) {
+                        targetColumns.add(i);
+                    }
+                }
+            }
+        } else {
+            keyColumns = loadedData.keyColumns.stream().map(Integer::parseInt).collect(Collectors.toList());
+            targetColumns = loadedData.targetColumns.stream().map(Integer::parseInt).collect(Collectors.toList());
+        }
 
         for (int i = 0; i < list.size(); i++) {
             if (i == 0 && hasHeader) {

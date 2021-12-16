@@ -50,6 +50,8 @@ public class App {
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.dataList_B complete");
 
             if (!isReady(dataList_A, dataList_B)) {
+                System.out.println(
+                        ">>>>>>>>>>>>>>>>>>>>>.not ready:->dataList_A:" + dataList_A + ":dataList_B>" + dataList_B);
                 return;
             }
 
@@ -78,7 +80,7 @@ public class App {
     }
 
     private static boolean isReady(List<String> dataList_A, List<String> dataList_B) {
-        return (dataList_A != null && dataList_A.size() > 1) && (dataList_B != null && dataList_B.size() > 1);
+        return (dataList_A != null && dataList_A.size() > 0) && (dataList_B != null && dataList_B.size() > 0);
     }
 
     private static List<String> getDataList(TargetData data, Map<String, Object> cilent,
