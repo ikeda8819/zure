@@ -37,15 +37,17 @@ public class FileService implements Executable {
         if (hasHeader) {
             String header = list.get(0);
             String[] arr = header.split(",");
-            for (int i = 0; i < arr.length; i++) {
-                for (int j = 0; j < loadedData.keyColumns.size(); j++) {
-                    if (arr[i].equals(loadedData.keyColumns.get(j))) {
-                        keyColumns.add(i);
+            for (int j = 0; j < loadedData.keyColumns.size(); j++) {
+                for (int k = 0; k < arr.length; k++) {
+                    if (arr[k].equals(loadedData.keyColumns.get(j))) {
+                        keyColumns.add(k);
                     }
                 }
-                for (int j = 0; j < loadedData.targetColumns.size(); j++) {
-                    if (arr[i].equals(loadedData.targetColumns.get(j))) {
-                        targetColumns.add(i);
+            }
+            for (int j = 0; j < loadedData.targetColumns.size(); j++) {
+                for (int k = 0; k < arr.length; k++) {
+                    if (arr[k].equals(loadedData.targetColumns.get(j))) {
+                        targetColumns.add(k);
                     }
                 }
             }
@@ -80,8 +82,7 @@ public class FileService implements Executable {
             returnList.add(keyAndtarget.toString());
         }
 
-        // System.out.println("returnListreturnListreturnListreturnListreturnList--->>"
-        // + returnList);
+        System.out.println("returnListreturnListreturnListreturnListreturnList--->>" + returnList);
         return returnList;
     }
 
