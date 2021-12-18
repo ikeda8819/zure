@@ -3,13 +3,10 @@
  */
 package zure;
 
-import java.sql.Connection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.mongodb.client.MongoClient;
 
 import zure.data.SourceType;
 import zure.data.TargetData;
@@ -21,6 +18,8 @@ public class App {
 
     public static void main(String[] args) {
         if (args.length != 2) {
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>.比較する2ファイルを引数に指定してください。");
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>.例）java -jar app-all.jar yourfile1.zure yourfile2.zure");
             return;
         }
 

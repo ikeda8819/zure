@@ -14,13 +14,9 @@ public class FileService implements Executable {
 
     @Override
     public List<String> execute(TargetData loadedData) throws Exception {
-        // TODO Auto-generated method stub
-        System.out.println("FileServiceFileServiceFileServiceFileServiceFileService--->>" + loadedData.file);
 
         List<String> list = new ArrayList<>();
         Files.lines(Paths.get(Setting.FILE_ROOT_PATH + loadedData.file)).forEach(e -> list.add(e));
-
-        List<String> returnList = new ArrayList<>();
 
         String delimiter = "";
         if ("csv".equals(loadedData.type)) {
@@ -55,6 +51,8 @@ public class FileService implements Executable {
             keyColumns = loadedData.keyColumns.stream().map(Integer::parseInt).collect(Collectors.toList());
             targetColumns = loadedData.targetColumns.stream().map(Integer::parseInt).collect(Collectors.toList());
         }
+
+        List<String> returnList = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
             if (i == 0 && hasHeader) {

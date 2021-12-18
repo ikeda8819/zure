@@ -18,8 +18,6 @@ public class RdbService implements Executable {
     @Override
     public List<String> execute(TargetData loadedTargetData) throws Exception {
         String sql = "";
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>.loadedTargetData.hasSQLFile():" + loadedTargetData.hasSQLFile());
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>.loadedTargetData.hasSQLFile():" + loadedTargetData.queryFile);
         if (loadedTargetData.hasSQLFile()) {
             List<String> list = new ArrayList<>();
             Files.lines(Paths.get(Setting.QUERY_FILE_PATH + loadedTargetData.queryFile)).forEach(e -> list.add(e));
@@ -39,17 +37,13 @@ public class RdbService implements Executable {
                     loadedTargetData.table);
         }
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>.execute:sql:" + sql);
-
         List<String> resultList = new ArrayList<>();
-
         try (Connection connection = DriverManager.getConnection(loadedTargetData.url, loadedTargetData.username,
                 loadedTargetData.password); Statement statement = connection.createStatement();) {
 
             ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
-
                 StringBuilder keyAndtarget = new StringBuilder(Setting.NOT_YET);
                 int i = 0;
                 for (String keyColumn : loadedTargetData.keyColumns) {
@@ -67,15 +61,10 @@ public class RdbService implements Executable {
                     }
                     keyAndtarget.append(String.valueOf(rs.getObject(targetColumn)));
                 }
-
                 // System.out.println("keytarget=" + keyAndtarget.toString());
-
                 resultList.add(keyAndtarget.toString());
             }
-
             return resultList;
         }
-
     }
-
 }
