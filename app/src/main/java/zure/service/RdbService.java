@@ -16,7 +16,7 @@ import zure.data.TargetData;
 public class RdbService implements Executable {
 
     @Override
-    public List<String> execute(Object connection, TargetData loadedTargetData) throws Exception {
+    public List<String> execute(TargetData loadedTargetData) throws Exception {
         String sql = "";
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>.loadedTargetData.hasSQLFile():" + loadedTargetData.hasSQLFile());
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>.loadedTargetData.hasSQLFile():" + loadedTargetData.queryFile);
@@ -43,37 +43,38 @@ public class RdbService implements Executable {
 
         List<String> resultList = new ArrayList<>();
 
-        connection = DriverManager.getConnection(loadedTargetData.url, loadedTargetData.username,
-                loadedTargetData.password);
-        Statement statement = ((Connection) connection).createStatement();
-        ResultSet rs = statement.executeQuery(sql);
+        try (Connection connection = DriverManager.getConnection(loadedTargetData.url, loadedTargetData.username,
+                loadedTargetData.password); Statement statement = connection.createStatement();) {
 
-        while (rs.next()) {
+            ResultSet rs = statement.executeQuery(sql);
 
-            StringBuilder keyAndtarget = new StringBuilder(Setting.NOT_YET);
-            int i = 0;
-            for (String keyColumn : loadedTargetData.keyColumns) {
-                if (i++ != 0) {
-                    keyAndtarget.append(Setting.SEPARATE);
+            while (rs.next()) {
+
+                StringBuilder keyAndtarget = new StringBuilder(Setting.NOT_YET);
+                int i = 0;
+                for (String keyColumn : loadedTargetData.keyColumns) {
+                    if (i++ != 0) {
+                        keyAndtarget.append(Setting.SEPARATE);
+                    }
+                    keyAndtarget.append(String.valueOf(rs.getObject(keyColumn)));
                 }
-                keyAndtarget.append(String.valueOf(rs.getObject(keyColumn)));
-            }
-            keyAndtarget.append(Setting.KV_SEPARATE); // この文字列でsplitしてkeyとtargetを判別出来るようにする
+                keyAndtarget.append(Setting.KV_SEPARATE); // この文字列でsplitしてkeyとtargetを判別出来るようにする
 
-            i = 0;
-            for (String targetColumn : loadedTargetData.targetColumns) {
-                if (i++ != 0) {
-                    keyAndtarget.append(Setting.SEPARATE);
+                i = 0;
+                for (String targetColumn : loadedTargetData.targetColumns) {
+                    if (i++ != 0) {
+                        keyAndtarget.append(Setting.SEPARATE);
+                    }
+                    keyAndtarget.append(String.valueOf(rs.getObject(targetColumn)));
                 }
-                keyAndtarget.append(String.valueOf(rs.getObject(targetColumn)));
+
+                // System.out.println("keytarget=" + keyAndtarget.toString());
+
+                resultList.add(keyAndtarget.toString());
             }
 
-            // System.out.println("keytarget=" + keyAndtarget.toString());
-
-            resultList.add(keyAndtarget.toString());
+            return resultList;
         }
-
-        return resultList;
 
     }
 

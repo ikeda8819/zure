@@ -16,11 +16,11 @@ import zure.data.TargetData;
 public class MongoDbService implements Executable {
 
     @Override
-    public List<String> execute(Object connection, TargetData loadedData) throws Exception {
+    public List<String> execute(TargetData loadedData) throws Exception {
 
         // jdbc:mongodb:Server=MyServer;Port=27017;Database=test;User=test;Password=Password;
-        connection = MongoClients.create(loadedData.url);
-        MongoDatabase db = ((MongoClient) connection).getDatabase("");
+        MongoClient connection = MongoClients.create(loadedData.url);
+        MongoDatabase db = connection.getDatabase("");
         MongoCollection<Document> coll = db.getCollection(loadedData.table);
 
         // TODO Auto-generated method stub

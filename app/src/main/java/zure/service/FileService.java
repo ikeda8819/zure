@@ -13,7 +13,7 @@ import zure.data.TargetData;
 public class FileService implements Executable {
 
     @Override
-    public List<String> execute(Object connection, TargetData loadedData) throws Exception {
+    public List<String> execute(TargetData loadedData) throws Exception {
         // TODO Auto-generated method stub
         System.out.println("FileServiceFileServiceFileServiceFileServiceFileService--->>" + loadedData.file);
 

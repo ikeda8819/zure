@@ -24,13 +24,6 @@ public class App {
             return;
         }
 
-        // connection系は全部クローズできるようにここで宣言する
-        Connection connection = null;
-        MongoClient mongoClient = null;
-        Map<String, Object> cilent = new HashMap<>();
-        cilent.put("connection", connection);
-        cilent.put("mongoClient", mongoClient);
-
         Map<String, Executable> service = new HashMap<>();
         service.put("RdbService", new RdbService());
         service.put("MongoDbService", new MongoDbService());
@@ -43,10 +36,10 @@ public class App {
             TargetData data_B = Zure.loadDataFromFile(args[1]);
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.data_B complete");
 
-            List<String> dataList_A = getDataList(data_A, cilent, service);
+            List<String> dataList_A = getDataList(data_A, service);
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.dataList_A complete");
 
-            List<String> dataList_B = getDataList(data_B, cilent, service);
+            List<String> dataList_B = getDataList(data_B, service);
             System.out.println(">>>>>>>>>>>>>>>>>>>>>.dataList_B complete");
 
             if (!isReady(dataList_A, dataList_B)) {
@@ -66,16 +59,7 @@ public class App {
         } catch (Exception e1) {
             e1.printStackTrace();
         } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-                if (mongoClient != null) {
-                    mongoClient.close();
-                }
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
+
         }
     }
 
@@ -83,18 +67,17 @@ public class App {
         return (dataList_A != null && dataList_A.size() > 0) && (dataList_B != null && dataList_B.size() > 0);
     }
 
-    private static List<String> getDataList(TargetData data, Map<String, Object> cilent,
-            Map<String, Executable> service) throws Exception {
+    private static List<String> getDataList(TargetData data, Map<String, Executable> service) throws Exception {
         if (SourceType.isRDB(data.type)) {
-            return service.get("RdbService").execute(cilent.get("connection"), data);
+            return service.get("RdbService").execute(data);
         } else if (SourceType.isNoSQL(data.type)) {
             String label = SourceType.getLabelByType(data.type);
             if ("mongodb".equals(label)) {
-                return service.get("MongoDbService").execute(cilent.get("mongoClient"), data);
+                return service.get("MongoDbService").execute(data);
             } else {
             }
         } else if (SourceType.isFile(data.type)) {
-            return service.get("FileService").execute(cilent.get("mongoClient"), data);
+            return service.get("FileService").execute(data);
         }
         return Collections.emptyList();
     }
