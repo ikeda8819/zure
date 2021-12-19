@@ -77,6 +77,7 @@ public class App {
             }
         } else if (SourceType.isFile(data.type)) {
             return service.get("FileService").execute(data);
+        } else {
         }
         return Collections.emptyList();
     }

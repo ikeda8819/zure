@@ -5,10 +5,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -174,59 +170,6 @@ public class Zure {
         data.targetColumns = targetColumns;
 
         return data;
-    }
-
-    public static String buildSQL(String table, List<String> keys, List<String> targets) {
-        StringBuilder columns = new StringBuilder();
-        for (int i = 0; i < keys.size(); i++) {
-            if (i != 0) {
-                columns.append(", ");
-            }
-            columns.append(keys.get(i));
-        }
-        for (int i = 0; i < targets.size(); i++) {
-            columns.append(", " + targets.get(i));
-        }
-        return "select {{columns}} from {{table}};".replace("{{columns}}", columns.toString()).replace("{{table}}",
-                table);
-    }
-
-    public static List<String> executeSQL(Connection connection, String sql, TargetData targetData) {
-        List<String> resultList = new ArrayList<>();
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
-
-            while (rs.next()) {
-
-                StringBuilder keyAndtarget = new StringBuilder(Setting.NOT_YET);
-                int i = 0;
-                for (String keyColumn : targetData.keyColumns) {
-                    if (i++ != 0) {
-                        keyAndtarget.append(Setting.SEPARATE);
-                    }
-                    keyAndtarget.append(String.valueOf(rs.getObject(keyColumn)));
-                }
-                keyAndtarget.append(Setting.KV_SEPARATE); // この文字列でsplitしてkeyとtargetを判別出来るようにする
-
-                i = 0;
-                for (String targetColumn : targetData.targetColumns) {
-                    if (i++ != 0) {
-                        keyAndtarget.append(Setting.SEPARATE);
-                    }
-                    keyAndtarget.append(String.valueOf(rs.getObject(targetColumn)));
-                }
-                resultList.add(keyAndtarget.toString());
-            }
-
-            return resultList;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     public static void outputResultFile(Map<String, List<String>> errorMAp, List<String> list_A, List<String> list_B)
