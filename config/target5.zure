@@ -1,8 +1,10 @@
 type: postgresql
 url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public&user=postgres&password=admin
-query_file: shop_custom.sql
-key_columns: 
-- id
+table: neta
+key_columns:
+- id 
+- user_id
 target_columns: 
 - category
 - title
+

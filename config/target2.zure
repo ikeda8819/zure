@@ -1,11 +1,6 @@
-type: postgresql
-host: localhost
-port: 5432
-user: postgres
-password: admin
-schema: public
-database: postgres
-table: neta
+type: mysql
+url: jdbc:mysql://localhost:3306/mysql?serverTimezone=UTC&useSSL=false&user=root&password=admin
+table: test_shop
 key_columns: 
 - id
 - user_id

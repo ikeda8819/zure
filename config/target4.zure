@@ -1,17 +1,9 @@
 type: csv
-file: shop.csv
-stop_on_invalid_record: true
-charset: UTF-8
-newline: LF
-delimiter: ','
-quote: '"'
-escape: '"'
-skip_header_lines: 1
-last_row: 12345
+file: shop_A.csv
+header: true
 key_columns: 
 - id
 target_columns: 
-- name
-- address
-- owner
-
+- email
+- location
+- tel

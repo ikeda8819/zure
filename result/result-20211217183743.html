@@ -1,0 +1,54 @@
+<!doctype html>
+
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+
+  <title>ZURE-RESULT</title>
+
+  <link rel="stylesheet" href="./static/bootstrap.min.css">
+  <script src="./static/bootstrap.min.js"></script>
+
+</head>
+
+<body style="padding-top:36px;">
+<div class="container">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">チェックが完了しました！  </h4>
+        <hr>
+        <h4 class="alert-heading">SUMMARY</h4>
+        <div style="display: flex;">
+            <div style="width:152px;">ターゲットAのデータ件数</div><div style="width:88px;text-align: right;">7</div>
+        </div>
+        <div style="display: flex;">
+            <div style="width:152px;">ターゲットBのデータ件数</div><div style="width:88px;text-align: right;">7</div>
+        </div>
+        <div style="display: flex;">
+            <div style="width:152px;">チェックOKの数</div><div style="width:88px;text-align: right;">0</div>
+        </div>
+        <div style="display: flex;">
+            <div style="width:152px;">チェックNGの数</div><div style="width:88px;text-align: right;">0</div>
+        </div>
+        <div style="display: flex;">
+            <div style="width:152px;">チェック不明の数</div><div style="width:88px;text-align: right;">14</div>
+        </div>
+        <hr>
+        <p class="mb-0">NGや不明のデータの詳細は以下で確認出来ます。</p>
+    </div>
+    <h4 class="alert-heading">Detail</h4>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">NG</a>
+            <a class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">ターゲットAの不明データ</a>
+            <a class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">ターゲットBの不明データ</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"></div>
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"> こちらは重複または比較対象のデータが存在しない可能性があります。<br/>1{{separate}}1<br/>2{{separate}}2<br/>3{{separate}}3<br/>4{{separate}}1<br/>5{{separate}}1<br/>6{{separate}}1<br/>7{{separate}}1<br/></div>
+        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">こちらは重複または比較対象のデータが存在しない可能性があります。<br/>1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>11<br/></div>
+    </div>
+</div>
+    
+</body>
+</html>

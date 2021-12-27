@@ -1,0 +1,10 @@
+type: mongodb
+url: mongodb://localhost
+database:sample
+table: shop
+key_columns:
+- name
+target_columns: 
+- location
+- tel
+- owner

@@ -1,8 +1,8 @@
 select
-id,
-name,
-address
-from shop a
-inner join shop_detail b
+a.id as id,
+a.category as category,
+a.title as title
+from neta a
+inner join neta b
   on a.id = b.id
-where delete_flg = 0;
+where 1 = 1;
