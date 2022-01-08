@@ -13,6 +13,7 @@ import org.bson.Document;
 
 import zure.Executable;
 import zure.data.TargetData;
+import zure.data.Setting;
 
 public class MongoDbService implements Executable {
 
@@ -26,19 +27,38 @@ public class MongoDbService implements Executable {
 
             MongoCursor<Document> mongoCursor = collection.find().iterator();
 
-            List<String> list = new ArrayList<>();
+            List<String> resultList = new ArrayList<>();
             try {
                 while (mongoCursor.hasNext()) {
-                    System.out.println("mongodb.next()mongodb.next()mongodb.next()mongodb.next()");
-                    System.out.println(mongoCursor.next());
+                    StringBuilder keyAndtarget = new StringBuilder(Setting.NOT_YET);
+                    // System.out.println(mongoCursor.next().get("name"));
+                    Document doc = (Document) mongoCursor.next();
+                    int i = 0;
+                    for (String keyColumn : loadedData.keyColumns) {
+                        if (i++ != 0) {
+                            keyAndtarget.append(Setting.SEPARATE);
+                        }
+                        keyAndtarget.append(String.valueOf(doc.get(keyColumn)));
+                    }
+                    keyAndtarget.append(Setting.KV_SEPARATE); // この文字列でsplitしてkeyとtargetを判別出来るようにする
+
+                    i = 0;
+                    for (String targetColumn : loadedData.targetColumns) {
+                        if (i++ != 0) {
+                            keyAndtarget.append(Setting.SEPARATE);
+                        }
+                        keyAndtarget.append(String.valueOf(doc.get(targetColumn)));
+                    }
+                    // System.out.println("keytarget=" + keyAndtarget.toString());
+                    resultList.add(keyAndtarget.toString());
                 }
             } catch (Exception e) {
-                list.clear();
+                resultList.clear();
             } finally {
                 if (mongoCursor != null)
                     mongoCursor.close();
             }
-            return list;
+            return resultList;
         }
     }
 
