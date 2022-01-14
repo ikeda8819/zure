@@ -1,9 +1,9 @@
 type: mysql
 url: jdbc:mysql://localhost:3306/mysql?serverTimezone=UTC&useSSL=false&user=root&password=admin
-table: test_shop
+table: sales
 key_columns: 
-- id
-- user_id
+- sales_no
 target_columns: 
-- category
-- title
+- total_amount
+- delivery_fee
+- amount_of_consumption_tax
