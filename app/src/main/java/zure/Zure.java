@@ -72,7 +72,7 @@ public class Zure {
             if (data_A.startsWith(Setting.NOT_YET)) {
                 String[] arr = data_A.split(Pattern.quote(Setting.KV_SEPARATE));
                 String key = arr[0].replace(Setting.NOT_YET, "");
-                unknown_A.append(key);
+                unknown_A.append("key->" + key);
                 unknown_A.append("<br/>");
             }
         }
@@ -84,7 +84,7 @@ public class Zure {
             if (data_B.startsWith(Setting.NOT_YET)) {
                 String[] arr = data_B.split(Pattern.quote(Setting.KV_SEPARATE));
                 String key = arr[0].replace(Setting.NOT_YET, "");
-                unknown_B.append(key);
+                unknown_B.append("key->" + key);
                 unknown_B.append("<br/>");
             }
         }

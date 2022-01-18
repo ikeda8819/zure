@@ -1,8 +1,9 @@
 type: postgresql
 url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public&user=postgres&password=admin
-query_file: shop_custom.sql
+table: t_sale
 key_columns: 
 - id
 target_columns: 
-- category
-- title
+- sales_amount
+- delivery_charge
+- amount_of_consumption_tax

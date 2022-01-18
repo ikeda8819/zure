@@ -1,6 +1,6 @@
 type: postgresql
 url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public&user=postgres&password=admin
-table: neta
+table: t_sale
 key_columns:
 - id 
 - user_id
