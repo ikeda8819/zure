@@ -37,7 +37,7 @@ public class RdbService implements Executable {
                     loadedTargetData.table);
         }
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>.sql" + sql);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>.sql:" + sql);
 
         List<String> resultList = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(loadedTargetData.url, loadedTargetData.username,

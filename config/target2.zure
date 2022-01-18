@@ -2,7 +2,8 @@ type: mysql
 url: jdbc:mysql://localhost:3306/mysql?serverTimezone=UTC&useSSL=false&user=root&password=admin
 table: sales
 key_columns: 
-- sales_no
+- sales_date
+- customer_id
 target_columns: 
 - total_amount
 - delivery_fee

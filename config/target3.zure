@@ -1,9 +1,10 @@
 type: postgresql
 url: jdbc:postgresql://localhost:5432/postgres?currentSchema=public&user=postgres&password=admin
-table: t_sale
+query_file: sales_custom.sql
 key_columns: 
-- id
+- sale_date
+- user_id
 target_columns: 
-- sales_amount
+- total
 - delivery_charge
 - amount_of_consumption_tax
