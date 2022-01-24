@@ -46,8 +46,9 @@ public class App {
                         ">>>>>>>>>>>>>>>>>>>>>.not ready:->dataList_A:" + dataList_A + ":dataList_B>" + dataList_B);
                 return;
             }
-            System.out.println(
-                    ">>>>>>>>>>>>>>>>>>>>>.ready:->dataList_A:" + dataList_A + ":dataList_B>" + dataList_B);
+            // System.out.println(
+            // ">>>>>>>>>>>>>>>>>>>>>.ready:->dataList_A:" + dataList_A + ":dataList_B>" +
+            // dataList_B);
 
             Map<String, List<String>> errorInfo = Zure.bulkCheck(dataList_A, dataList_B, data_A.targetColumns,
                     data_B.targetColumns);

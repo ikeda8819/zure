@@ -37,9 +37,12 @@ public class RdbService implements Executable {
                     loadedTargetData.table);
         }
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>.sql:" + sql);
+        // System.out.println(">>>>>>>>>>>>>>>>>>>>>.sql:" + sql);
 
         List<String> resultList = new ArrayList<>();
+        if ("mysql".equals(loadedTargetData.type)) {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        }
         try (Connection connection = DriverManager.getConnection(loadedTargetData.url, loadedTargetData.username,
                 loadedTargetData.password); Statement statement = connection.createStatement();) {
 
